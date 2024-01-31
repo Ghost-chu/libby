@@ -46,8 +46,8 @@ subprojects {
 
             (if(version.toString().endsWith("SNAPSHOT")) mavenSnapshotUrl else mavenUrl)?.let { url ->
                 maven(url) {
-                    val mavenUsername: String? by project
-                    val mavenPassword: String? by project
+                    val mavenUsername: String? = System.getenv("CODEMC_PUBLISH_USERNAME");
+                    val mavenPassword: String? = System.getenv("CODEMC_PUBLISH_PASSWORD")
                     if(mavenUsername != null && mavenPassword != null) {
                         credentials {
                             username = mavenUsername
