@@ -1,4 +1,13 @@
-# Libby (AlessioDP)
+# Libby (AlessioDP) - Unofficial
+
+## Changes in this fork
+
+* Eliminates the addition of all uncontrolled central sources that need to go through a user-added mirror repository.
+* Possible Eclipse Aether fix.
+
+---
+
+# Old ReadMe
 
 ## [Changes in this fork](./CHANGELOG.md)
 
