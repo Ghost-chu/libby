@@ -40,8 +40,8 @@ subprojects {
 
     publishing {
         repositories {
-            val mavenUrl = "https://repo.codemc.io/repository/maven-snapshots/"
-            val mavenSnapshotUrl = "https://repo.codemc.io/repository/maven-releases/"
+            val mavenUrl = "https://repo.codemc.io/repository/maven-releases/"
+            val mavenSnapshotUrl = "https://repo.codemc.io/repository/maven-snapshots/"
 
             maven((if(version.toString().endsWith("SNAPSHOT")) mavenSnapshotUrl else mavenUrl)) {
                 val mavenUsername: String? = System.getenv("CODEMC_PUBLISH_USERNAME");
