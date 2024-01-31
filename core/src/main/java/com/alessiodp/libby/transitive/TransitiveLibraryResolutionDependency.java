@@ -54,9 +54,9 @@ enum TransitiveLibraryResolutionDependency {
                 .checksum(checksum)
                 .repository(Repositories.MAVEN_CENTRAL)
                 // Relocate all packages used in Libby to avoid conflicts
-                .relocate("org{}eclipse{}aether{}util", "org.eclipse.aether.util") // maven-resolver-util
-                .relocate("org{}eclipse{}aether", "org.eclipse.aether") // maven-resolver-api
-                .relocate("org{}apache{}maven{}repository{}internal", "org.apache.maven.repository.internal") // maven-resolver-provider
+                .relocate("org{}eclipse{}aether{}util", "com.alessiodp.libby.shade.org.eclipse.aether.util") // maven-resolver-util
+                .relocate("org{}eclipse{}aether", "com.alessiodp.libby.shade.org.eclipse.aether") // maven-resolver-api
+                .relocate("org{}apache{}maven{}repository{}internal", "com.alessiodp.libby.shade.org.apache.maven.repository.internal") // maven-resolver-provider
 
                 .build();
     }
