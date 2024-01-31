@@ -41,26 +41,19 @@ subprojects {
 
     publishing {
         repositories {
-            maven {
-                val releaseUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-                val snapshotUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-                url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotUrl else releaseUrl)
+            val mavenUrl: String? by project
+            val mavenSnapshotUrl: String? by project
 
-                credentials {
-                    username = (project.properties["ossrhUsername"] ?: "").toString()
-                    password = (project.properties["ossrhPassword"] ?: "").toString()
-                }
-            }
-
-            maven {
-                val releaseUrl = "https://repo.alessiodp.com/releases"
-                val snapshotUrl = "https://repo.alessiodp.com/snapshots"
-
-                url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotUrl else releaseUrl)
-
-                credentials {
-                    username = (project.properties["alessiodpRepoUsername"] ?: "").toString()
-                    password = (project.properties["alessiodpRepoPassword"] ?: "").toString()
+            (if(version.toString().endsWith("SNAPSHOT")) mavenSnapshotUrl else mavenUrl)?.let { url ->
+                maven(url) {
+                    val mavenUsername: String? by project
+                    val mavenPassword: String? by project
+                    if(mavenUsername != null && mavenPassword != null) {
+                        credentials {
+                            username = mavenUsername
+                            password = mavenPassword
+                        }
+                    }
                 }
             }
         }
@@ -71,8 +64,8 @@ subprojects {
 
                 pom {
                     name.set("Libby")
-                    description.set("A runtime dependency management library for plugins running in Java-based Minecraft server platforms.")
-                    url.set("https://github.com/AlessioDP/libby")
+                    description.set("A runtime dependency management library for plugins running in Java-based Minecraft server platforms. (unoffical fork)")
+                    url.set("https://github.com/Ghost-chu/libby")
 
                     licenses {
                         license {
@@ -83,15 +76,15 @@ subprojects {
 
                     developers {
                         developer {
-                            id = "AlessioDP"
-                            email = "me@alessiodp.com"
+                            id = "Ghost-chu"
+                            email = "ghostchu@qq.com"
                         }
                     }
 
                     scm {
-                        connection = "scm:git:git://github.com/AlessioDP/libby.git"
-                        developerConnection = "scm:git:git@github.com:AlessioDP/libby.git"
-                        url = "https://github.com/AlessioDP/libby"
+                        connection = "scm:git:git://github.com/Ghost-chu/libby.git"
+                        developerConnection = "scm:git:git@github.com:Ghost-chu/libby.git"
+                        url = "https://github.com/Ghost-chu/libby"
                     }
                 }
             }
