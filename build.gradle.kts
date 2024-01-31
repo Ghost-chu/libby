@@ -17,7 +17,6 @@ allprojects {
 subprojects {
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
-    apply(plugin = "signing")
 
     dependencies {
         compileOnly("org.jetbrains:annotations:24.0.1")
@@ -41,18 +40,16 @@ subprojects {
 
     publishing {
         repositories {
-            val mavenUrl: String? by project
-            val mavenSnapshotUrl: String? by project
+            val mavenUrl = "https://repo.codemc.io/repository/maven-snapshots/"
+            val mavenSnapshotUrl = "https://repo.codemc.io/repository/maven-releases/"
 
-            (if(version.toString().endsWith("SNAPSHOT")) mavenSnapshotUrl else mavenUrl)?.let { url ->
-                maven(url) {
-                    val mavenUsername: String? = System.getenv("CODEMC_PUBLISH_USERNAME");
-                    val mavenPassword: String? = System.getenv("CODEMC_PUBLISH_PASSWORD")
-                    if(mavenUsername != null && mavenPassword != null) {
-                        credentials {
-                            username = mavenUsername
-                            password = mavenPassword
-                        }
+            maven((if(version.toString().endsWith("SNAPSHOT")) mavenSnapshotUrl else mavenUrl)) {
+                val mavenUsername: String? = System.getenv("CODEMC_PUBLISH_USERNAME");
+                val mavenPassword: String? = System.getenv("CODEMC_PUBLISH_PASSWORD")
+                if(mavenUsername != null && mavenPassword != null) {
+                    credentials {
+                        username = mavenUsername
+                        password = mavenPassword
                     }
                 }
             }
