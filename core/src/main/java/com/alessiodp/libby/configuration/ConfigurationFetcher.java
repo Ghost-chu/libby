@@ -105,7 +105,6 @@ public class ConfigurationFetcher {
                         .artifactId("nanojson")
                         .version("1.8")
                         .checksumFromBase64("qyhAVZM8LYvqhGQrbmW2aHV4hRzn+2flPCV98wAimJo=")
-                        .repository(Repositories.MAVEN_CENTRAL)
                         .build()
         ));
 

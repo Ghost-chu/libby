@@ -6,7 +6,7 @@ plugins {
 
 allprojects {
     group = "com.ghostchu.lib.unofficial.com.alessiodp.libby"
-    version = "2.0.0-SNAPSHOT"
+    version = "2.0.1-SNAPSHOT"
 
     repositories {
         mavenLocal()

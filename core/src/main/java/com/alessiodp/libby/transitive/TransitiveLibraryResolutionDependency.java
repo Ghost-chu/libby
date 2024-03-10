@@ -52,7 +52,6 @@ enum TransitiveLibraryResolutionDependency {
                 .artifactId(artifactId)
                 .version(version)
                 .checksumFromBase64(checksum)
-                .repository(Repositories.MAVEN_CENTRAL)
                 // Relocate all packages used in Libby to avoid conflicts
                 .relocate("org{}eclipse{}aether{}util", "org.eclipse.aether.util") // maven-resolver-util
                 .relocate("org{}eclipse{}aether", "org.eclipse.aether") // maven-resolver-api
