@@ -7,7 +7,6 @@ import com.alessiodp.libby.classloader.IsolatedClassLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
@@ -25,16 +24,21 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * A reflection-based helper for resolving transitive dependencies. It automatically
- * downloads Maven Resolver Supplier, Maven Resolver Provider and their transitive dependencies to resolve transitive dependencies.
+ * downloads Libby Maven Resolver to resolve transitive dependencies.
  *
- * @see <a href="https://github.com/apache/maven-resolver">Apache Maven Artifact Resolver</a>
+ * @see <a href="https://github.com/AlessioDP/libby-maven-resolver">Libby Maven Resolver</a>
  */
 public class TransitiveDependencyHelper {
 
     /**
+     * com.alessiodp.libby.maven.resolver.TransitiveDependencyCollector class name for reflections
+     */
+    private static final String TRANSITIVE_DEPENDENCY_COLLECTOR_CLASS = replaceWithDots("com{}alessiodp{}libby{}maven{}resolver{}TransitiveDependencyCollector");
+
+    /**
      * org.eclipse.aether.artifact.Artifact class name for reflections
      */
-    private static final String ARTIFACT_CLASS = replaceWithDots("org.eclipse.aether.artifact.Artifact");
+    private static final String ARTIFACT_CLASS = replaceWithDots("org{}eclipse{}aether{}artifact{}Artifact");
 
     /**
      * TransitiveDependencyCollector class instance, used in {@link #findTransitiveLibraries(Library)}
@@ -68,28 +72,24 @@ public class TransitiveDependencyHelper {
         this.libraryManager = libraryManager;
 
         IsolatedClassLoader classLoader = new IsolatedClassLoader();
-        String collectorClassName = "com.alessiodp.libby.transitive.TransitiveDependencyCollector";
-        String collectorClassPath = '/' + collectorClassName.replace('.', '/') + ".class";
 
-        for (TransitiveLibraryResolutionDependency dependency : TransitiveLibraryResolutionDependency.values()) {
-            classLoader.addPath(libraryManager.downloadLibrary(dependency.toLibrary()));
-        }
-
-        final Class<?> transitiveDependencyCollectorClass;
-        try {
-            transitiveDependencyCollectorClass = classLoader.defineClass(collectorClassName, requireNonNull(getClass().getResourceAsStream(collectorClassPath), "resourceCollectorClass"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        classLoader.addPath(libraryManager.downloadLibrary(Library.builder()
+                .groupId("com{}alessiodp{}libby{}maven{}resolver")
+                .artifactId("libby-maven-resolver")
+                .version("1.0.0")
+                .checksumFromBase64("aMujUbcaxqGkNX5LNIwNzJTffn3MH6DrZKzXcu67+Qc=")
+                .build()
+        ));
 
         try {
+            Class<?> transitiveDependencyCollectorClass = classLoader.loadClass(TRANSITIVE_DEPENDENCY_COLLECTOR_CLASS);
             Class<?> artifactClass = classLoader.loadClass(ARTIFACT_CLASS);
 
-            // com.alessiodp.libby.TransitiveDependencyCollector(Path)
+            // com.alessiodp.libby.maven.resolver.TransitiveDependencyCollector(Path)
             Constructor<?> constructor = transitiveDependencyCollectorClass.getConstructor(Path.class);
             constructor.setAccessible(true);
             transitiveDependencyCollectorObject = constructor.newInstance(saveDirectory);
-            // com.alessiodp.libby.TransitiveDependencyCollector#findTransitiveDependencies(String, String, String, String, Stream<String>)
+            // com.alessiodp.libby.maven.resolver.TransitiveDependencyCollector#findTransitiveDependencies(String, String, String, String, Stream<String>)
             resolveTransitiveDependenciesMethod = transitiveDependencyCollectorClass.getMethod("findTransitiveDependencies", String.class, String.class, String.class, String.class, Stream.class);
             resolveTransitiveDependenciesMethod.setAccessible(true);
             // org.eclipse.aether.artifact.Artifact#getGroupId()

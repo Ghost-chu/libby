@@ -2,11 +2,6 @@ plugins {
     id("net.kyori.blossom") version "2.0.1"
 }
 
-dependencies {
-    compileOnly("org.apache.maven.resolver:maven-resolver-supplier:1.9.15")
-    compileOnly("org.apache.maven:maven-resolver-provider:3.9.4")
-}
-
 sourceSets {
     main {
         blossom {
